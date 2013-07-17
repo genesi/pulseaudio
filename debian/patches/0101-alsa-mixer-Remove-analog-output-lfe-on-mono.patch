@@ -1,0 +1,288 @@
+From ba0203c4c0938fd646cf559456e3d691fc889029 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 4 Oct 2012 13:32:35 +0200
+Subject: [PATCH] alsa-mixer: Remove analog-output-lfe-on-mono
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Upstreamed from Debian: "Although in principle Ac '97 hardware has a
+separate mono LFE pin nothing seems to use it. To make matters worse
+it does confuse PulseAudio's port selection slightly which causes
+audio in virtualbox not to work out of the box."
+
+Credit: Sjoerd Simons <sjoerd@debian.org>
+Credit: Martin-Éric Racine <martin-eric.racine@iki.fi>
+BugLink: https://bugs.launchpad.net/bugs/1016969
+BugLink: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=673847
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/Makefile.am                                    |    1 -
+ .../mixer/paths/analog-output-lfe-on-mono.conf     |   89 --------------------
+ src/modules/alsa/mixer/profile-sets/default.conf   |   14 +--
+ .../alsa/mixer/profile-sets/extra-hdmi.conf        |   14 +--
+ .../profile-sets/force-speaker-and-int-mic.conf    |   14 +--
+ .../alsa/mixer/profile-sets/force-speaker.conf     |   14 +--
+ 6 files changed, 28 insertions(+), 118 deletions(-)
+ delete mode 100644 src/modules/alsa/mixer/paths/analog-output-lfe-on-mono.conf
+
+Index: pulseaudio-2.1/src/Makefile.am
+===================================================================
+--- pulseaudio-2.1.orig/src/Makefile.am	2012-07-19 13:29:43.000000000 +0200
++++ pulseaudio-2.1/src/Makefile.am	2012-10-04 14:10:38.580144515 +0200
+@@ -1140,7 +1140,6 @@
+ 		modules/alsa/mixer/paths/analog-output-desktop-speaker.conf \
+ 		modules/alsa/mixer/paths/analog-output-headphones.conf \
+ 		modules/alsa/mixer/paths/analog-output-headphones-2.conf \
+-		modules/alsa/mixer/paths/analog-output-lfe-on-mono.conf \
+ 		modules/alsa/mixer/paths/analog-output-mono.conf \
+ 		modules/alsa/mixer/paths/iec958-stereo-output.conf \
+ 		modules/alsa/mixer/paths/hdmi-output-0.conf \
+Index: pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/default.conf
+===================================================================
+--- pulseaudio-2.1.orig/src/modules/alsa/mixer/profile-sets/default.conf	2012-07-19 13:29:38.000000000 +0200
++++ pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/default.conf	2012-10-04 14:14:50.948140053 +0200
+@@ -101,42 +101,42 @@
+ [Mapping analog-mono]
+ device-strings = hw:%f
+ channel-map = mono
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 1
+ 
+ [Mapping analog-stereo]
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 10
+ 
+ [Mapping analog-surround-40]
+ device-strings = surround40:%f
+ channel-map = front-left,front-right,rear-left,rear-right
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-41]
+ device-strings = surround41:%f
+ channel-map = front-left,front-right,rear-left,rear-right,lfe
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+ [Mapping analog-surround-50]
+ device-strings = surround50:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-51]
+ device-strings = surround51:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+@@ -144,7 +144,7 @@
+ device-strings = surround71:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
+ description = Analog Surround 7.1
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+Index: pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf
+===================================================================
+--- pulseaudio-2.1.orig/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf	2012-07-19 13:29:38.000000000 +0200
++++ pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf	2012-10-04 14:15:22.612139494 +0200
+@@ -27,42 +27,42 @@
+ [Mapping analog-mono]
+ device-strings = hw:%f
+ channel-map = mono
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 1
+ 
+ [Mapping analog-stereo]
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 10
+ 
+ [Mapping analog-surround-40]
+ device-strings = surround40:%f
+ channel-map = front-left,front-right,rear-left,rear-right
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-41]
+ device-strings = surround41:%f
+ channel-map = front-left,front-right,rear-left,rear-right,lfe
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+ [Mapping analog-surround-50]
+ device-strings = surround50:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-51]
+ device-strings = surround51:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+@@ -70,7 +70,7 @@
+ device-strings = surround71:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
+ description = Analog Surround 7.1
+-paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+Index: pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf
+===================================================================
+--- pulseaudio-2.1.orig/src/modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf	2012-07-16 13:37:55.000000000 +0200
++++ pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf	2012-10-04 14:10:38.584144515 +0200
+@@ -24,42 +24,42 @@
+ [Mapping analog-mono]
+ device-strings = hw:%f
+ channel-map = mono
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic-always analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 1
+ 
+ [Mapping analog-stereo]
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic-always analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 10
+ 
+ [Mapping analog-surround-40]
+ device-strings = surround40:%f
+ channel-map = front-left,front-right,rear-left,rear-right
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-41]
+ device-strings = surround41:%f
+ channel-map = front-left,front-right,rear-left,rear-right,lfe
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+ [Mapping analog-surround-50]
+ device-strings = surround50:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-51]
+ device-strings = surround51:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+@@ -67,7 +67,7 @@
+ device-strings = surround71:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
+ description = Analog Surround 7.1
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+Index: pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/force-speaker.conf
+===================================================================
+--- pulseaudio-2.1.orig/src/modules/alsa/mixer/profile-sets/force-speaker.conf	2012-07-16 13:37:55.000000000 +0200
++++ pulseaudio-2.1/src/modules/alsa/mixer/profile-sets/force-speaker.conf	2012-10-04 14:10:38.584144515 +0200
+@@ -23,42 +23,42 @@
+ [Mapping analog-mono]
+ device-strings = hw:%f
+ channel-map = mono
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 1
+ 
+ [Mapping analog-stereo]
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono
+ paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
+ priority = 10
+ 
+ [Mapping analog-surround-40]
+ device-strings = surround40:%f
+ channel-map = front-left,front-right,rear-left,rear-right
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-41]
+ device-strings = surround41:%f
+ channel-map = front-left,front-right,rear-left,rear-right,lfe
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+ [Mapping analog-surround-50]
+ device-strings = surround50:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 
+ [Mapping analog-surround-51]
+ device-strings = surround51:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 8
+ direction = output
+ 
+@@ -66,7 +66,7 @@
+ device-strings = surround71:%f
+ channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
+ description = Analog Surround 7.1
+-paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker
+ priority = 7
+ direction = output
+ 

@@ -1,0 +1,17 @@
+Index: pulseaudio-2.0/src/daemon/default.pa.in
+===================================================================
+--- pulseaudio-2.0.orig/src/daemon/default.pa.in	2012-06-08 16:08:17.880943481 +1000
++++ pulseaudio-2.0/src/daemon/default.pa.in	2012-06-08 16:08:54.056943784 +1000
+@@ -170,9 +170,9 @@
+ 
+ ifelse(@HAVE_DBUS@, 1, [dnl
+ ### Load DBus protocol
+-.ifexists module-dbus-protocol@PA_SOEXT@
+-load-module module-dbus-protocol
+-.endif
++#.ifexists module-dbus-protocol@PA_SOEXT@
++#load-module module-dbus-protocol
++#.endif
+ ])dnl
+ 
+ ifelse(@HAVE_X11@, 1, [dnl

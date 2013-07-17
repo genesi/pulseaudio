@@ -1,0 +1,21 @@
+Index: pulseaudio-2.0/src/utils/padsp.in
+===================================================================
+--- pulseaudio-2.0.orig/src/utils/padsp.in	2012-03-06 01:30:31.000000000 +1100
++++ pulseaudio-2.0/src/utils/padsp.in	2012-05-15 11:46:35.045621003 +1000
+@@ -75,10 +75,12 @@
+ 
+ shift $(( $OPTIND - 1 ))
+ 
+-if [ x"$LD_PRELOAD" = x ] ; then
+-   LD_PRELOAD="@pkglibdir@/libpulsedsp.so"
+-else
+-   LD_PRELOAD="$LD_PRELOAD @pkglibdir@/libpulsedsp.so"
++if `pgrep -f /usr/bin/pulseaudio 1>/dev/null` ; then
++  if [ x"$LD_PRELOAD" = x ] ; then
++     LD_PRELOAD="@pkglibdir@/libpulsedsp.so"
++  else
++     LD_PRELOAD="$LD_PRELOAD @pkglibdir@/libpulsedsp.so"
++  fi
+ fi
+ 
+ export LD_PRELOAD

@@ -1,0 +1,20 @@
+Index: pulseaudio-2.0/src/modules/alsa/mixer/paths/analog-input.conf.common
+===================================================================
+--- pulseaudio-2.0.orig/src/modules/alsa/mixer/paths/analog-input.conf.common	2012-06-08 16:08:02.144943348 +1000
++++ pulseaudio-2.0/src/modules/alsa/mixer/paths/analog-input.conf.common	2012-06-08 16:08:47.212943728 +1000
+@@ -235,12 +235,12 @@
+ [Element Digital Input Source]
+ enumeration = select
+ 
+-[Option Digital Input Source:Analog Inputs]
+-name = input
+-
+ [Option Digital Input Source:Digital Mic 1]
+ name = input-microphone
+ 
++[Option Digital Input Source:Analog Inputs]
++name = input
++
+ [Option Digital Input Source:Digital Mic 2]
+ name = input-microphone
+ 
