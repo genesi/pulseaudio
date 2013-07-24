@@ -1,2 +1,2 @@
-usr/lib/*/libpulsecore.so usr/lib
+usr/lib/libpulsecore.so usr/lib
 usr/include/pulsecore/*
